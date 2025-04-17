@@ -279,12 +279,7 @@ const OtpVerification = () => {
 
         <ErrorMessage show={!!error}>{error || pageText?.error?.OTPvalidation}</ErrorMessage>
 
-        <Button
-          type="submit"
-          fullWidth
-          loading={loading}
-          disabled={loading || otp.join('').length !== otpLength}
-        >
+        <Button type="submit" fullWidth loading={loading} disabled={loading}>
           {pageText?.primaryButton || 'Verify'}
         </Button>
       </form>

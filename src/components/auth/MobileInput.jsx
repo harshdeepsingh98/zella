@@ -116,12 +116,7 @@ const MobileInput = () => {
 
         <ErrorMessage show={!!error}>{error}</ErrorMessage>
 
-        <Button
-          type="submit"
-          fullWidth
-          loading={loading}
-          disabled={loading || number.length !== 10}
-        >
+        <Button type="submit" fullWidth loading={loading} disabled={loading}>
           {pageText?.primaryButton || 'Send OTP'}
         </Button>
       </form>
