@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@components/common';
 import useAppSelector from '@hooks/useAppSelector';
 import { selectAppMetadata } from '@features/app/selectors';
+import sampleImage from '@assets/images/sample.png';
 
 const Container = styled(Box)`
   display: flex;
@@ -16,6 +17,10 @@ const Container = styled(Box)`
   background-color: #000000;
   color: #ffffff;
   position: relative;
+  background-image: url(${sampleImage});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const Overlay = styled(Box)`
