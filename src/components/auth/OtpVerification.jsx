@@ -11,7 +11,7 @@ import {
   selectMobileNumber,
   selectFormattedMobileNumber,
 } from '@features/auth/selectors';
-import { selectOtpVerifyText, selectOtpFieldSize } from '@features/app/selectors';
+import { selectOtpVerifyText, selectOtpFieldSize, selectPages } from '@features/app/selectors';
 import { Button, ErrorMessage } from '@components/common';
 
 const OtpContainer = styled(Box)`
@@ -32,13 +32,11 @@ const InputsContainer = styled(Box)`
 const OtpInput = styled(TextField)`
   width: 48px;
   height: 48px;
-
   .MuiOutlinedInput-root {
     height: 100%;
     width: 100%;
     border-radius: 8px;
     text-align: center;
-
     input {
       text-align: center;
       padding: 14px 8px;
@@ -69,7 +67,6 @@ const ResendLink = styled(Link)`
   margin-left: 8px;
   cursor: ${({ active }) => (active ? 'pointer' : 'default')};
   text-decoration: none;
-
   &:hover {
     text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   }
@@ -82,13 +79,12 @@ const WrongNumberLink = styled(Link)`
   margin-bottom: 24px;
   cursor: pointer;
   text-decoration: none;
-
   &:hover {
     text-decoration: underline;
   }
 `;
 
-const OtpVerification = () => {
+const OtpVerification = ({ pageCode }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -99,6 +95,7 @@ const OtpVerification = () => {
   const formattedMobileNumber = useAppSelector(selectFormattedMobileNumber);
   const loading = useAppSelector(selectAuthLoading);
   const error = useAppSelector(selectAuthError);
+  const pages = useAppSelector(selectPages);
 
   // Local state
   const [otp, setOtp] = useState(Array(otpLength).fill(''));
@@ -107,6 +104,24 @@ const OtpVerification = () => {
 
   // Refs for OTP inputs
   const inputRefs = useRef([]);
+
+  // Helper function to find next page code
+  const findNextPageCode = () => {
+    const currentIndex = pages.findIndex(page => page.metadata.code === pageCode);
+    if (currentIndex !== -1 && currentIndex < pages.length - 1) {
+      return pages[currentIndex + 1].metadata.code;
+    }
+    return null;
+  };
+
+  // Helper function to find previous page code
+  const findPreviousPageCode = () => {
+    const currentIndex = pages.findIndex(page => page.metadata.code === pageCode);
+    if (currentIndex > 0) {
+      return pages[currentIndex - 1].metadata.code;
+    }
+    return null;
+  };
 
   // Set up refs for OTP inputs
   useEffect(() => {
@@ -183,7 +198,6 @@ const OtpVerification = () => {
   // Handle form submission
   const handleSubmit = async e => {
     e.preventDefault();
-
     const otpValue = otp.join('');
 
     if (otpValue.length !== otpLength) {
@@ -194,9 +208,16 @@ const OtpVerification = () => {
       // Dispatch action to verify OTP
       const resultAction = await dispatch(verifyOtp({ mobileNumber, otp: otpValue }));
 
-      // If verification is successful, navigate to personal info page
+      // If verification is successful, navigate to the next page in the flow
       if (verifyOtp.fulfilled.match(resultAction)) {
-        navigate('/auth/personal-info');
+        const nextPageCode = findNextPageCode();
+
+        if (nextPageCode) {
+          navigate(`/${nextPageCode}`);
+        } else {
+          // Fallback if no next page is found
+          navigate('/');
+        }
       }
     } catch (err) {
       console.error('Failed to verify OTP:', err);
@@ -220,7 +241,14 @@ const OtpVerification = () => {
 
   // Handle wrong number
   const handleWrongNumber = () => {
-    navigate('/auth/mobile');
+    const prevPageCode = findPreviousPageCode();
+
+    if (prevPageCode) {
+      navigate(`/${prevPageCode}`);
+    } else {
+      // Fallback if no previous page is found
+      navigate('/');
+    }
   };
 
   return (
@@ -255,6 +283,7 @@ const OtpVerification = () => {
               ? pageText?.resendCode?.replace('{{ timer }}', '0')
               : pageText?.resendCode?.replace('{{ timer }}', `${resendTimer}s`)}
           </ResendText>
+
           {canResend && (
             <ResendLink
               component="button"

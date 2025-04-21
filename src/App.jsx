@@ -4,10 +4,8 @@ import { useDispatch } from 'react-redux';
 
 import { fetchAppData } from '@features/app/appSlice';
 import { Layout } from '@components/common';
+import DynamicScreen from '@pages/DynamicScreen';
 import Home from '@pages/Home';
-import MobileAuth from '@pages/MobileAuth';
-import OtpVerify from '@pages/OtpVerify';
-import PersonalInfo from '@pages/PersonalInfo';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -20,13 +18,14 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        {/* Redirect from root to the first screen */}
         <Route index element={<Home />} />
-        <Route path="auth">
-          <Route path="mobile" element={<MobileAuth />} />
-          <Route path="otp" element={<OtpVerify />} />
-          <Route path="personal-info" element={<PersonalInfo />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        {/* Dynamic route that handles all page codes */}
+        <Route path="/:code" element={<DynamicScreen />} />
+
+        {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/auth-1" replace />} />
       </Route>
     </Routes>
   );

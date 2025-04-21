@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@components/common';
 import useAppSelector from '@hooks/useAppSelector';
-import { selectAppMetadata } from '@features/app/selectors';
+import { selectAppMetadata, selectPages } from '@features/app/selectors';
 import sampleImage from '@assets/images/sample.png';
 
 const Container = styled(Box)`
@@ -123,9 +123,19 @@ const AvatarContainer = styled(Box)`
 const LandingSection = () => {
   const navigate = useNavigate();
   const appMetadata = useAppSelector(selectAppMetadata);
+  const pages = useAppSelector(selectPages);
 
   const handleGetStarted = () => {
-    navigate('/auth/mobile');
+    // Get the first page from the JSON configuration
+    if (pages && pages.length > 0) {
+      const firstPage = pages[0];
+      // Navigate using the code from the JSON
+      navigate(`/${firstPage.metadata.code}`);
+    } else {
+      // Fallback if no pages are available
+      console.warn('No pages found in configuration');
+      navigate('/auth-1'); // Fallback to a default route
+    }
   };
 
   return (

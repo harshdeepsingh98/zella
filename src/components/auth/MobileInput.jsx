@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Box, InputAdornment } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { verifyMobileNumber, setMobileNumber, resetAuthError } from '@features/auth/authSlice';
 import { selectAuthLoading, selectAuthError } from '@features/auth/selectors';
 import { selectMobileAuthText } from '@features/app/selectors';
-import { Button, FormField, ErrorMessage } from '@components/common';
+import { FormField, ErrorMessage } from '@components/common';
+import PageNavigationButton from '@components/common/PageNavigationButton';
 
 const FormContainer = styled(Box)`
   display: flex;
@@ -26,8 +26,7 @@ const HelperText = styled(Box)`
   margin-top: 8px;
 `;
 
-const MobileInput = () => {
-  const navigate = useNavigate();
+const MobileInput = ({ pageCode }) => {
   const dispatch = useAppDispatch();
 
   // Get texts from Redux store
@@ -57,39 +56,42 @@ const MobileInput = () => {
     }
   };
 
-  // Handle form submission
-  const handleSubmit = async e => {
+  // Handle form validation before navigation
+  const handleBeforeNavigation = async e => {
     e.preventDefault();
 
     if (!number) {
       setInputError('Please enter your mobile number');
-      return;
+      return false; // Prevent navigation
     }
 
     if (number.length !== 10) {
       setInputError(
         pageText?.error?.numberValidation || 'Please enter a valid 10-digit mobile number'
       );
-      return;
+      return false; // Prevent navigation
     }
 
     try {
       // Dispatch action to verify mobile number
       const resultAction = await dispatch(verifyMobileNumber(number));
 
-      // If verification is successful, store mobile number in Redux and navigate to OTP page
+      // If verification is successful, store mobile number in Redux
       if (verifyMobileNumber.fulfilled.match(resultAction)) {
         dispatch(setMobileNumber(number));
-        navigate('/auth/otp');
+        return true; // Allow navigation
       }
+
+      return false; // Prevent navigation on failure
     } catch (err) {
       console.error('Failed to send OTP:', err);
+      return false; // Prevent navigation on error
     }
   };
 
   return (
     <FormContainer>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={e => e.preventDefault()}>
         <FieldContainer>
           <FormField
             id="mobileNumber"
@@ -116,9 +118,16 @@ const MobileInput = () => {
 
         <ErrorMessage show={!!error}>{error}</ErrorMessage>
 
-        <Button type="submit" fullWidth loading={loading} disabled={loading}>
-          {pageText?.primaryButton || 'Send OTP'}
-        </Button>
+        {/* Use the dynamic navigation button */}
+        <PageNavigationButton
+          currentPageCode={pageCode}
+          direction="next"
+          label={pageText?.primaryButton || 'Send OTP'}
+          onClick={handleBeforeNavigation}
+          loading={loading}
+          disabled={loading}
+          type="submit"
+        />
       </form>
     </FormContainer>
   );

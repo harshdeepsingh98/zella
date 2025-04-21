@@ -4,7 +4,8 @@ import { MobileInput } from '@components/auth';
 import useAppSelector from '@hooks/useAppSelector';
 import { selectMobileAuthText } from '@features/app/selectors';
 
-const MobileAuth = () => {
+// Updated MobileAuth component that receives pageCode and pageData from DynamicScreen
+const MobileAuth = ({ pageCode, pageData }) => {
   // Get texts from Redux store
   const pageText = useAppSelector(selectMobileAuthText);
 
@@ -15,7 +16,8 @@ const MobileAuth = () => {
       showBackButton
       visibleLogo
     >
-      <MobileInput />
+      {/* Pass the pageCode to MobileInput for dynamic navigation */}
+      <MobileInput pageCode={pageCode} />
     </PageWrapper>
   );
 };
