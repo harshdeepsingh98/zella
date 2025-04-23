@@ -1,0 +1,63 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LandingSection Snapshots > matches snapshot with default props 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-fjUQFl fsNohD MuiBox-root css-0"
+  >
+    <div
+      class="sc-guGTOK cxBxXY MuiBox-root css-0"
+    />
+    <div
+      class="sc-hZARmv jfFzUi MuiBox-root css-0"
+    >
+      <div
+        class="sc-dKKIkQ kddPpa MuiBox-root css-0"
+      >
+        <div
+          class="sc-fpEFIB bZpxwD"
+        >
+          <svg
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"
+            />
+          </svg>
+          Snapshot App
+        </div>
+      </div>
+      <div
+        class="sc-gAqISa hziRZQ MuiBox-root css-0"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h1 sc-ifkGpL kCMiLX css-o2w69a-MuiTypography-root"
+        >
+          Snapshot App
+        </h1>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle1 sc-fbguzk gbCBWz css-10wpov9-MuiTypography-root"
+        >
+          Snapshot Description
+        </h6>
+        <div
+          class="sc-gGarWV jVTCia MuiBox-root css-0"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-fullWidth sc-Qotzb eHpXPy css-189e9pj-MuiButtonBase-root-MuiButton-root"
+            tabindex="0"
+            type="button"
+          >
+            Get Started
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
